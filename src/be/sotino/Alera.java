@@ -13,7 +13,7 @@ import be.sotino.view.PlayerView;
  * @author g34771
  */
 public class Alera {
-    
+    private static moteur m;
 
     /**
      * @param args the command line arguments
@@ -22,7 +22,7 @@ public class Alera {
         
         Player me = new Player();
         PlayerView fr = new PlayerView(me);
-        moteur m = new moteur(fr);
+        m = new moteur(fr);
         while(m.t.isAlive());
         System.out.println("death");
         
