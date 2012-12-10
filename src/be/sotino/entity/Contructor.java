@@ -13,10 +13,16 @@ public abstract class Contructor extends Personnage {
     private double timePassed;
     private long timeNeed;
     private boolean constructing;
+    private short constructionLvl;
 
     public Contructor(int life) {
         super(life);
-        constructing=false;
+        constructing = false;
+        constructionLvl = 0;
+    }
+
+    public short getConstructionLvl() {
+        return constructionLvl;
     }
 
     public boolean isConstructing() {
@@ -26,7 +32,10 @@ public abstract class Contructor extends Personnage {
     public boolean finishConstruction(long delta) {
         if (constructing) {
             timePassed += (delta * (1 + getWorker()));
-            constructing =!( timePassed >= timeNeed);
+            constructing = !(timePassed >= timeNeed);
+            if (!constructing) {
+                constructionLvl++;
+            }
         }
         return !constructing;
     }
@@ -38,13 +47,11 @@ public abstract class Contructor extends Personnage {
     }
 
     public int getProgression() {
-        if(constructing){
-            return (int)((timePassed*100)/timeNeed);
+        if (constructing) {
+            return (int) ((timePassed * 100) / timeNeed);
         }
         return 100;
     }
-    
-    
 
     public abstract int getWorker();
 }
