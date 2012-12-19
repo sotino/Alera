@@ -4,6 +4,7 @@
  */
 package be.sotino.entity;
 
+import be.sotino.entity.construction.Exploitant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +28,18 @@ public class Player extends Personnage {
     }
     
     public void buyExploitant(){
-        if (ressource.pay(Exploitant.getPrice())) {
+        if (ressource.pay(Exploitant.EXPLOITANT_PRICE)) {
             exploitants.add(new Exploitant(ressource));
         }
     }
 
     public List<Exploitant> getExploitants() {
         return exploitants;
+    }
+
+    @Override
+    public Ressource getPrice() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     

@@ -4,7 +4,7 @@
  */
 package be.sotino.view;
 
-import be.sotino.entity.Exploitant;
+import be.sotino.entity.construction.Exploitant;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JFrame;

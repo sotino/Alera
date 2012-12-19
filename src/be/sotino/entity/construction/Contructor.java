@@ -2,7 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.sotino.entity;
+package be.sotino.entity.construction;
+
+import be.sotino.entity.Personnage;
 
 /**
  *
@@ -40,7 +42,7 @@ public abstract class Contructor extends Personnage {
         return !constructing;
     }
 
-    public void statConstruction(int timeNeed) {
+    public void startConstruction(int timeNeed) {
         this.timeNeed = timeNeed;
         this.timePassed = 0;
         constructing = true;
@@ -53,5 +55,7 @@ public abstract class Contructor extends Personnage {
         return 100;
     }
 
-    public abstract int getWorker();
+    public int getWorker(){
+        return 1;
+    }
 }

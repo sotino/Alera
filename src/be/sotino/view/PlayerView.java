@@ -4,9 +4,14 @@
  */
 package be.sotino.view;
 
-import be.sotino.busness.moteur;
-import be.sotino.entity.Exploitant;
+import be.sotino.entity.construction.Exploitant;
 import be.sotino.entity.Player;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 /**
@@ -14,9 +19,12 @@ import javax.swing.JFrame;
  * @author Simon
  */
 public class PlayerView extends javax.swing.JFrame {
+
     private Player player;
     private JFrame frame;
     private CommandementCenter commandementCenter;
+    private static HashMap<JButton, Exploitant> exploitants = new HashMap<JButton, Exploitant>();
+    private static Component currDetail;
     private long lastRefresh;
 
     /**
@@ -31,22 +39,44 @@ public class PlayerView extends javax.swing.JFrame {
 
     public PlayerView(Player player) {
         this();
-        this.player=player;
+        this.player = player;
         ressource1.setPlayerRessource(this.player.getRessource());
-        selectItem2.setExploitants(this.player.getExploitants());
         notifyChange();
     }
-    
-    public void notifyChange(){
+
+    public void notifyChange() {
         long now = System.currentTimeMillis();
-        long delta = now -lastRefresh;
-        lastRefresh= now;
-        for(Exploitant e: player.getExploitants()){
+        long delta = now - lastRefresh;
+        lastRefresh = now;
+        for (Exploitant e : player.getExploitants()) {
             e.refreshFromDelta(delta);
+            if (!exploitants.containsValue(e)){
+                JButton button = new JButton();
+                exploitants.put(button,e);
+                button.setIcon(new ImageIcon(getClass().getResource("/images/ferme.jpg")));
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        Exploitation exploitation  = new Exploitation();
+                        exploitation.setExploitant(exploitants.get(evt.getSource()));
+                        detailPanel.removeAll();
+                        detailPanel.add(exploitation);
+                        currDetail = exploitation;
+                        pack();
+                    }
+                });
+                vuePanel.add(button);
+                pack();
+            }
+        }
+        if(currDetail != null){
+            if(currDetail instanceof Exploitation){
+                ((Exploitation)currDetail).notifieChange();
+            }else if(currDetail instanceof CommandementCenter){
+                ((CommandementCenter)currDetail).notifieChange();
+            }
         }
         ressource1.notifieChange();
-        selectItem2.notifieChange();
-        if (frame!= null && frame.isVisible()){
+        if (frame != null && frame.isVisible()) {
             commandementCenter.notifieChange();
         }
     }
@@ -61,12 +91,43 @@ public class PlayerView extends javax.swing.JFrame {
     private void initComponents() {
 
         ressource1 = new be.sotino.view.Ressource();
-        selectItem2 = new be.sotino.view.SelectItem();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        vuePanel = new javax.swing.JPanel();
+        commandementButon = new javax.swing.JButton();
+        detailPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().add(ressource1, java.awt.BorderLayout.PAGE_START);
+
+        vuePanel.setLayout(new javax.swing.BoxLayout(vuePanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        commandementButon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/alphacastle2.png"))); // NOI18N
+        commandementButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                commandementButonActionPerformed(evt);
+            }
+        });
+        vuePanel.add(commandementButon);
+
+        jScrollPane1.setViewportView(vuePanel);
+
+        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        javax.swing.GroupLayout detailPanelLayout = new javax.swing.GroupLayout(detailPanel);
+        detailPanel.setLayout(detailPanelLayout);
+        detailPanelLayout.setHorizontalGroup(
+            detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 835, Short.MAX_VALUE)
+        );
+        detailPanelLayout.setVerticalGroup(
+            detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(detailPanel, java.awt.BorderLayout.SOUTH);
 
         jMenu1.setText("Achat");
 
@@ -82,27 +143,6 @@ public class PlayerView extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(71, 71, 71)
-                .addComponent(ressource1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(98, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 37, Short.MAX_VALUE)
-                .addComponent(selectItem2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(ressource1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectItem2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(131, Short.MAX_VALUE))
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -115,6 +155,15 @@ public class PlayerView extends javax.swing.JFrame {
         frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void commandementButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandementButonActionPerformed
+        commandementCenter = new CommandementCenter();
+        commandementCenter.setPlayer(player);
+        detailPanel.removeAll();
+        detailPanel.setLayout(new FlowLayout());
+        detailPanel.add(commandementCenter);
+        currDetail= commandementCenter;
+        pack();
+    }//GEN-LAST:event_commandementButonActionPerformed
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -125,10 +174,13 @@ public class PlayerView extends javax.swing.JFrame {
 //        
 //    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton commandementButon;
+    private javax.swing.JPanel detailPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JScrollPane jScrollPane1;
     private be.sotino.view.Ressource ressource1;
-    private be.sotino.view.SelectItem selectItem2;
+    private javax.swing.JPanel vuePanel;
     // End of variables declaration//GEN-END:variables
 }

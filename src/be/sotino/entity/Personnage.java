@@ -8,7 +8,7 @@ package be.sotino.entity;
  *
  * @author g34771
  */
-public class Personnage {
+public abstract class Personnage {
     private int life;
     public Personnage(int life) {
         this.life = life;
@@ -22,9 +22,7 @@ public class Personnage {
         this.life = life;
     }
 
-    public static Ressource getPrice(){
-        return new Ressource(0, 0, 0);
-    }
+    public abstract Ressource getPrice();
     
     
 }

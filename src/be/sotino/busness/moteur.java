@@ -32,7 +32,6 @@ public class moteur implements Runnable {
     @Override
     public void run() {
         while (true) {
-            System.out.println("notify");
             playerView.notifyChange();
             try {
                 t.sleep(10);

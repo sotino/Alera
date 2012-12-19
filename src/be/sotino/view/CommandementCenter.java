@@ -4,6 +4,7 @@
  */
 package be.sotino.view;
 
+import be.sotino.entity.construction.Exploitant;
 import be.sotino.entity.Player;
 
 /**
@@ -19,6 +20,7 @@ public class CommandementCenter extends javax.swing.JPanel {
      */
     public CommandementCenter() {
         initComponents();
+        exploitantButton.setToolTipText(Exploitant.EXPLOITANT_PRICE.toString());
     }
 
     public void setPlayer(Player player) {
